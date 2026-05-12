@@ -3,6 +3,9 @@ services:
     build: .
     expose:
       - "80"
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASS=${ADMIN_PASS:-admin}
     volumes:
       - heritaxaqr-data:/var/www/html/data
       - heritaxaqr-uploads:/var/www/html/assets/uploads
