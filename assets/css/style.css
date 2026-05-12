@@ -579,7 +579,6 @@ a:hover { color: var(--accent-hover); }
     display: grid;
     grid-template-columns: 1fr 340px;
     gap: 2rem;
-    align-items: start;
 }
 
 .qr-editor-form {

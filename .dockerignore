@@ -1,0 +1,8 @@
+.git
+.gitignore
+.context
+data/*.db
+data/*.db-wal
+data/*.db-shm
+README.md
+docker-compose.yml

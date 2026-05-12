@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - heritaxaqr-data:/var/www/html/data
+      - heritaxaqr-uploads:/var/www/html/assets/uploads
+    restart: unless-stopped
+
+volumes:
+  heritaxaqr-data:
+  heritaxaqr-uploads:
