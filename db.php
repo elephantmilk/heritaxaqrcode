@@ -81,14 +81,18 @@ function getDB(): PDO {
     ");
     $db->exec("CREATE INDEX IF NOT EXISTS idx_qr_presets_user_id ON qr_presets(user_id)");
 
-    // Seed admin user if no users exist
-    $count = $db->query('SELECT COUNT(*) FROM users')->fetchColumn();
-    if ($count == 0) {
-        $adminUser = getenv('ADMIN_USER') ?: 'admin';
-        $adminPass = getenv('ADMIN_PASS') ?: 'admin';
+    // Seed or sync admin user from env vars
+    $adminUser = getenv('ADMIN_USER') ?: 'admin';
+    $adminPass = getenv('ADMIN_PASS') ?: 'admin';
+    $existing = $db->query('SELECT id, username, password_hash FROM users ORDER BY id LIMIT 1')->fetch();
+    if (!$existing) {
         $hash = password_hash($adminPass, PASSWORD_BCRYPT);
         $db->prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)')
            ->execute([$adminUser, $hash]);
+    } elseif ($existing['username'] !== $adminUser || !password_verify($adminPass, $existing['password_hash'])) {
+        $hash = password_hash($adminPass, PASSWORD_BCRYPT);
+        $db->prepare('UPDATE users SET username = ?, password_hash = ? WHERE id = ?')
+           ->execute([$adminUser, $hash, $existing['id']]);
     }
 
     return $db;
