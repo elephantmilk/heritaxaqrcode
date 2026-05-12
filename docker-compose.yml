@@ -1,8 +1,8 @@
 services:
   app:
     build: .
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     volumes:
       - heritaxaqr-data:/var/www/html/data
       - heritaxaqr-uploads:/var/www/html/assets/uploads
