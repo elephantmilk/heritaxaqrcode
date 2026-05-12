@@ -6,8 +6,14 @@ services:
     volumes:
       - heritaxaqr-data:/var/www/html/data
       - heritaxaqr-uploads:/var/www/html/assets/uploads
+    networks:
+      - dokploy-network
     restart: unless-stopped
 
 volumes:
   heritaxaqr-data:
   heritaxaqr-uploads:
+
+networks:
+  dokploy-network:
+    external: true
