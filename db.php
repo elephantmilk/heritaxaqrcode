@@ -84,9 +84,11 @@ function getDB(): PDO {
     // Seed admin user if no users exist
     $count = $db->query('SELECT COUNT(*) FROM users')->fetchColumn();
     if ($count == 0) {
-        $hash = password_hash('admin', PASSWORD_BCRYPT);
+        $adminUser = getenv('ADMIN_USER') ?: 'admin';
+        $adminPass = getenv('ADMIN_PASS') ?: 'admin';
+        $hash = password_hash($adminPass, PASSWORD_BCRYPT);
         $db->prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)')
-           ->execute(['admin', $hash]);
+           ->execute([$adminUser, $hash]);
     }
 
     return $db;
