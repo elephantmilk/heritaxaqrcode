@@ -28,6 +28,7 @@ class QRCodeController {
         $id = (int)($_POST['id'] ?? 0);
         $targetUrl = trim($_POST['target_url'] ?? '');
         $title = trim($_POST['title'] ?? '');
+        $description = trim($_POST['description'] ?? '');
         $shortCode = strtoupper(trim($_POST['short_code'] ?? ''));
         $dotStyle = $_POST['dot_style'] ?? 'square';
         $dotColor = $_POST['dot_color'] ?? '#ffffff';
@@ -37,6 +38,11 @@ class QRCodeController {
         $cornerDotStyle = $_POST['corner_dot_style'] ?? 'square';
         $cornerDotColor = $_POST['corner_dot_color'] ?? '#ffffff';
         $logoSize = max(0.1, min(0.5, (float)($_POST['logo_size'] ?? 0.4)));
+        $dotGradientEnabled = !empty($_POST['dot_gradient_enabled']) ? 1 : 0;
+        $dotGradientType = ($_POST['dot_gradient_type'] ?? 'linear') === 'radial' ? 'radial' : 'linear';
+        $dotGradientRotation = (float)($_POST['dot_gradient_rotation'] ?? 0);
+        $dotGradientColor1 = $_POST['dot_gradient_color1'] ?? '#000000';
+        $dotGradientColor2 = $_POST['dot_gradient_color2'] ?? '#888888';
 
         // Validate URL
         if ($targetUrl === '' || !filter_var($targetUrl, FILTER_VALIDATE_URL)) {
@@ -91,34 +97,41 @@ class QRCodeController {
         if ($id > 0) {
             // Update
             $stmt = $db->prepare('UPDATE qr_codes SET
-                target_url = ?, title = ?, short_code = ?,
+                target_url = ?, title = ?, description = ?, short_code = ?,
                 dot_style = ?, dot_color = ?, bg_color = ?,
                 corner_square_style = ?, corner_square_color = ?,
                 corner_dot_style = ?, corner_dot_color = ?,
-                logo_data = ?, logo_size = ?, updated_at = CURRENT_TIMESTAMP
+                logo_data = ?, logo_size = ?,
+                dot_gradient_enabled = ?, dot_gradient_type = ?, dot_gradient_rotation = ?,
+                dot_gradient_color1 = ?, dot_gradient_color2 = ?,
+                updated_at = CURRENT_TIMESTAMP
                 WHERE id = ? AND user_id = ?');
             $stmt->execute([
-                $targetUrl, $title, $shortCode,
+                $targetUrl, $title, $description, $shortCode,
                 $dotStyle, $dotColor, $bgColor,
                 $cornerSquareStyle, $cornerSquareColor,
                 $cornerDotStyle, $cornerDotColor,
                 $logoData, $logoSize,
+                $dotGradientEnabled, $dotGradientType, $dotGradientRotation,
+                $dotGradientColor1, $dotGradientColor2,
                 $id, $_SESSION['user_id']
             ]);
             flash('success', 'QR-Code aktualisiert.');
         } else {
             // Insert
             $stmt = $db->prepare('INSERT INTO qr_codes
-                (user_id, short_code, target_url, title, dot_style, dot_color, bg_color,
+                (user_id, short_code, target_url, title, description, dot_style, dot_color, bg_color,
                  corner_square_style, corner_square_color, corner_dot_style, corner_dot_color,
-                 logo_data, logo_size)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                 logo_data, logo_size,
+                 dot_gradient_enabled, dot_gradient_type, dot_gradient_rotation, dot_gradient_color1, dot_gradient_color2)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute([
-                $_SESSION['user_id'], $shortCode, $targetUrl, $title,
+                $_SESSION['user_id'], $shortCode, $targetUrl, $title, $description,
                 $dotStyle, $dotColor, $bgColor,
                 $cornerSquareStyle, $cornerSquareColor,
                 $cornerDotStyle, $cornerDotColor,
-                $logoData, $logoSize
+                $logoData, $logoSize,
+                $dotGradientEnabled, $dotGradientType, $dotGradientRotation, $dotGradientColor1, $dotGradientColor2
             ]);
             flash('success', 'QR-Code erstellt.');
         }

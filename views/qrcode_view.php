@@ -7,7 +7,8 @@
     <title><?= $pageTitle ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <?php $cssPath = __DIR__ . '/../assets/css/style.css'; $cssVer = file_exists($cssPath) ? filemtime($cssPath) : 0; ?>
+    <link rel="stylesheet" href="/assets/css/style.css?v=<?= $cssVer ?>">
     <script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -48,7 +49,7 @@
     <script>
     (function() {
         var baseUrl = window.location.origin;
-        var data = <?= json_encode([
+        var data = <?= json_encode(array_merge([
             'short_code' => $qr['short_code'],
             'dot_style' => $qr['dot_style'],
             'dot_color' => $qr['dot_color'],
@@ -59,13 +60,37 @@
             'corner_dot_color' => $qr['corner_dot_color'],
             'logo_data' => $qr['logo_data'],
             'logo_size' => (float)$qr['logo_size'],
-        ]) ?>;
+        ], [
+            'dot_gradient_enabled' => (int)($qr['dot_gradient_enabled'] ?? 0),
+            'dot_gradient_type' => $qr['dot_gradient_type'] ?? 'linear',
+            'dot_gradient_rotation' => (float)($qr['dot_gradient_rotation'] ?? 0),
+            'dot_gradient_color1' => $qr['dot_gradient_color1'] ?? '#000000',
+            'dot_gradient_color2' => $qr['dot_gradient_color2'] ?? '#888888',
+        ])) ?>;
+
+        function getDotsOpts() {
+            if (data.dot_gradient_enabled && data.dot_gradient_type) {
+                var rot = (data.dot_gradient_rotation || 0) * Math.PI / 180;
+                return {
+                    type: data.dot_style,
+                    gradient: {
+                        type: data.dot_gradient_type,
+                        rotation: rot,
+                        colorStops: [
+                            { offset: 0, color: data.dot_gradient_color1 },
+                            { offset: 1, color: data.dot_gradient_color2 }
+                        ]
+                    }
+                };
+            }
+            return { color: data.dot_color, type: data.dot_style };
+        }
 
         function dlConfig() {
             return {
                 width: 1024, height: 1024, type: 'svg',
                 data: baseUrl + '/' + data.short_code,
-                dotsOptions: { color: data.dot_color, type: data.dot_style },
+                dotsOptions: getDotsOpts(),
                 backgroundOptions: { color: data.bg_color },
                 cornersSquareOptions: { type: data.corner_square_style, color: data.corner_square_color },
                 cornersDotOptions: { type: data.corner_dot_style, color: data.corner_dot_color },
@@ -78,7 +103,7 @@
         var qr = new QRCodeStyling({
             width: 400, height: 400, type: 'svg',
             data: baseUrl + '/' + data.short_code,
-            dotsOptions: { color: data.dot_color, type: data.dot_style },
+            dotsOptions: getDotsOpts(),
             backgroundOptions: { color: data.bg_color },
             cornersSquareOptions: { type: data.corner_square_style, color: data.corner_square_color },
             cornersDotOptions: { type: data.corner_dot_style, color: data.corner_dot_color },

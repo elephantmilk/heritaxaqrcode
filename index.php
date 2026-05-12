@@ -22,6 +22,8 @@ require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/DashboardController.php';
 require_once __DIR__ . '/controllers/QRCodeController.php';
 require_once __DIR__ . '/controllers/RedirectController.php';
+require_once __DIR__ . '/controllers/BatchController.php';
+require_once __DIR__ . '/controllers/PresetController.php';
 
 // --- Routes ---
 
@@ -79,25 +81,59 @@ if ($uri === '/api/qrcode/check-code' && $method === 'POST') {
     exit;
 }
 
+// Batch Import
+if ($uri === '/batch-import') {
+    requireAuth();
+    BatchController::importForm();
+    exit;
+}
+
+if ($uri === '/api/batch/create' && $method === 'POST') {
+    requireAuth();
+    BatchController::createEntry();
+    exit;
+}
+
+if ($uri === '/api/batch/save-pdf' && $method === 'POST') {
+    requireAuth();
+    BatchController::savePdf();
+    exit;
+}
+
+// Presets
+if ($uri === '/api/presets' && $method === 'GET') {
+    requireAuth();
+    PresetController::list();
+    exit;
+}
+
+if ($uri === '/api/presets/save' && $method === 'POST') {
+    requireAuth();
+    PresetController::save();
+    exit;
+}
+
+if (preg_match('#^/api/presets/delete/(\d+)$#', $uri, $m) && $method === 'POST') {
+    requireAuth();
+    PresetController::delete((int)$m[1]);
+    exit;
+}
+
 // Public QR code view — standalone page with rendered QR code
-if (preg_match('#^/qrcode/view/([A-Z0-9]{3,20})$#', $uri, $m)) {
+// Mit Bindestrich (z. B. Title-01) oder nur A-Z0-9
+if (preg_match('#^/qrcode/view/([a-zA-Z0-9\-]{2,60})$#', $uri, $m)) {
     QRCodeController::publicView($m[1]);
     exit;
 }
-if (preg_match('#^/qrcode/view/([a-zA-Z0-9]{3,20})$#', $uri, $m)) {
-    QRCodeController::publicView(strtoupper($m[1]));
-    exit;
-}
 
-// Short-code redirect (catch-all)
-if (preg_match('#^/([A-Z0-9]{3,20})$#', $uri, $m)) {
-    RedirectController::handle($m[1]);
-    exit;
-}
-
-// Also allow lowercase access (redirect lookup is case-insensitive)
-if (preg_match('#^/([a-zA-Z0-9]{3,20})$#', $uri, $m)) {
-    RedirectController::handle(strtoupper($m[1]));
+// Short-code redirect (catch-all): Basis-URL/Title-01 oder /ABC123
+if (preg_match('#^/([a-zA-Z0-9\-]{2,60})$#', $uri, $m)) {
+    $code = $m[1];
+    // Ohne Bindestrich: weiterhin case-insensitive (uppercase für Lookup)
+    if (strpos($code, '-') === false && preg_match('/^[a-zA-Z0-9]{3,20}$/', $code)) {
+        $code = strtoupper($code);
+    }
+    RedirectController::handle($code);
     exit;
 }
 

@@ -7,10 +7,12 @@
     <title><?= e($pageTitle ?? APP_NAME) ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <?php $cssPath = __DIR__ . '/../assets/css/style.css'; $cssVer = file_exists($cssPath) ? filemtime($cssPath) : 0; ?>
+    <link rel="stylesheet" href="/assets/css/style.css?v=<?= $cssVer ?>">
     <?php if (!empty($loadQRLib)): ?>
     <script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/svg2pdf.js@2/dist/svg2pdf.umd.min.js"></script>
     <?php endif; ?>
 </head>
 <body>
@@ -34,6 +36,7 @@
             <?php if (isLoggedIn()): ?>
             <nav class="nav">
                 <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/batch-import" class="nav-link">Batch Import</a>
                 <a href="/qrcode/new" class="nav-link btn btn-sm btn-primary">+ Neuer QR-Code</a>
                 <a href="/logout" class="nav-link nav-logout">Logout</a>
             </nav>

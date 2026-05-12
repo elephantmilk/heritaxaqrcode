@@ -7,6 +7,7 @@ $defaults = [
     'id' => 0,
     'target_url' => '',
     'title' => '',
+    'description' => '',
     'short_code' => '',
     'dot_style' => 'rounded',
     'dot_color' => '#ffffff',
@@ -17,8 +18,14 @@ $defaults = [
     'corner_dot_color' => '#6366f1',
     'logo_data' => null,
     'logo_size' => 0.4,
+    'dot_gradient_enabled' => 0,
+    'dot_gradient_type' => 'linear',
+    'dot_gradient_rotation' => 135,
+    'dot_gradient_color1' => '#000000',
+    'dot_gradient_color2' => '#888888',
 ];
 $v = $qr ? array_merge($defaults, $qr) : $defaults;
+$v['dot_gradient_enabled'] = (int)($v['dot_gradient_enabled'] ?? 0);
 ?>
 
 <div class="page-header">
@@ -30,6 +37,25 @@ $v = $qr ? array_merge($defaults, $qr) : $defaults;
         <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= $v['id'] ?>">
 
+        <div class="form-section preset-section">
+            <h2>Design</h2>
+            <div class="preset-controls">
+                <div class="form-group">
+                    <label for="preset_select">Design laden</label>
+                    <select id="preset_select" class="preset-select">
+                        <option value="">— Gespeichertes Design wählen —</option>
+                    </select>
+                </div>
+                <div class="form-group preset-save-row">
+                    <label>&nbsp;</label>
+                    <div class="preset-save-group">
+                        <input type="text" id="preset_name" placeholder="Design-Name" class="preset-name-input">
+                        <button type="button" id="preset_save_btn" class="btn btn-ghost btn-sm">Design speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-section">
             <h2>Ziel</h2>
             <div class="form-group">
@@ -39,6 +65,10 @@ $v = $qr ? array_merge($defaults, $qr) : $defaults;
             <div class="form-group">
                 <label for="title">Titel <span class="text-muted">(optional)</span></label>
                 <input type="text" id="title" name="title" placeholder="Mein QR-Code" value="<?= e($v['title']) ?>">
+            </div>
+            <div class="form-group">
+                <label for="description">Beschreibung <span class="text-muted">(optional)</span></label>
+                <textarea id="description" name="description" rows="3" placeholder="Kurze Beschreibung..."><?= e($v['description']) ?></textarea>
             </div>
             <div class="form-group">
                 <label for="short_code">Code <span class="text-muted">(leer = automatisch 6-stellig)</span></label>
@@ -63,11 +93,51 @@ $v = $qr ? array_merge($defaults, $qr) : $defaults;
                         <option value="extra-rounded" <?= $v['dot_style'] === 'extra-rounded' ? 'selected' : '' ?>>Extra Rounded</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group dot-color-single" id="dot_color_wrap">
                     <label for="dot_color">Farbe</label>
                     <div class="color-input">
                         <input type="color" id="dot_color" name="dot_color" value="<?= e($v['dot_color']) ?>">
                         <input type="text" class="color-hex" value="<?= e($v['dot_color']) ?>" data-target="dot_color">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="dot_gradient_enabled" name="dot_gradient_enabled" value="1" <?= $v['dot_gradient_enabled'] ? 'checked' : '' ?>>
+                    Farbverlauf für Dots
+                </label>
+            </div>
+            <div class="gradient-options" id="gradient_options" style="<?= $v['dot_gradient_enabled'] ? '' : 'display:none' ?>">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dot_gradient_type">Verlauf-Typ</label>
+                        <select id="dot_gradient_type" name="dot_gradient_type">
+                            <option value="linear" <?= ($v['dot_gradient_type'] ?? 'linear') === 'linear' ? 'selected' : '' ?>>Linear</option>
+                            <option value="radial" <?= ($v['dot_gradient_type'] ?? '') === 'radial' ? 'selected' : '' ?>>Radial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dot_gradient_rotation">Winkel (Grad)</label>
+                        <div class="range-input">
+                            <input type="range" id="dot_gradient_rotation" name="dot_gradient_rotation" min="0" max="360" step="5" value="<?= e($v['dot_gradient_rotation'] ?? 135) ?>">
+                            <span id="dot_gradient_rotation_val"><?= (int)($v['dot_gradient_rotation'] ?? 135) ?>°</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dot_gradient_color1">Farbe 1</label>
+                        <div class="color-input">
+                            <input type="color" id="dot_gradient_color1" name="dot_gradient_color1" value="<?= e($v['dot_gradient_color1'] ?? '#000000') ?>">
+                            <input type="text" class="color-hex" value="<?= e($v['dot_gradient_color1'] ?? '#000000') ?>" data-target="dot_gradient_color1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dot_gradient_color2">Farbe 2</label>
+                        <div class="color-input">
+                            <input type="color" id="dot_gradient_color2" name="dot_gradient_color2" value="<?= e($v['dot_gradient_color2'] ?? '#888888') ?>">
+                            <input type="text" class="color-hex" value="<?= e($v['dot_gradient_color2'] ?? '#888888') ?>" data-target="dot_gradient_color2">
+                        </div>
                     </div>
                 </div>
             </div>
