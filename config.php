@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-define('APP_NAME', 'QRCodeMan');
-define('DB_PATH', __DIR__ . '/data/qrcodeman.db');
+define('APP_NAME', 'HeritaxaQR');
+define('DB_PATH', __DIR__ . '/data/heritaxaqr.db');
 define('UPLOAD_DIR', __DIR__ . '/assets/uploads/');
 define('MAX_UPLOAD_SIZE', 2 * 1024 * 1024); // 2MB
 

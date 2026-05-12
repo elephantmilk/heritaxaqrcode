@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         qrCode.append(previewEl);
 
     function getPreviewData() {
-        return 'https://www.qrcodeman.to/DEMO';
+        return 'https://www.heritaxa.com/DEMO';
     }
 
     function getDotsOptionsBatch() {
@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var settings = getStyleSettings();
         var targetUrl = document.getElementById('target_url').value.trim();
         var suffix = document.getElementById('suffix').value.trim();
-        var shortLinkBase = 'https://www.qrcodeman.to';
+        var shortLinkBase = 'https://www.heritaxa.com';
 
         processNext(0, settings, shortLinkBase, targetUrl, suffix);
     }
@@ -494,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Step 2: Render QR code (qrcodeman.to/CODE) and generate PDF
+                // Step 2: Render QR code (heritaxa.com/CODE) and generate PDF
                 generateAndUploadPDF(data, entry, suffix, shortLinkBase, function (success) {
                     logEntry(index, entry.title, success ? 'ok' : 'warn',
                         success ? data.short_code : 'PDF-Upload fehlgeschlagen');

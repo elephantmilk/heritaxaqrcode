@@ -21,7 +21,7 @@ class BatchController {
         $title       = $suffix !== '' ? $titleRaw . '-' . $suffix : $titleRaw;
         $description = trim($_POST['description'] ?? '');
         $targetUrl   = trim($_POST['target_url'] ?? '');
-        $baseUrl     = 'https://www.qrcodeman.to';
+        $baseUrl     = 'https://www.heritaxa.com';
         $dotStyle    = $_POST['dot_style'] ?? 'square';
         $dotColor    = $_POST['dot_color'] ?? '#ffffff';
         $bgColor     = $_POST['bg_color'] ?? '#0a0a0f';

@@ -1,4 +1,4 @@
-/* === QRCodeMan — Dark Minimalist Theme === */
+/* === HeritaxaQR — Dark Minimalist Theme === */
 
 :root {
     --bg-primary: #09090b;
@@ -10,9 +10,9 @@
     --text-primary: #fafafa;
     --text-secondary: #a1a1aa;
     --text-muted: #71717a;
-    --accent: #6366f1;
-    --accent-hover: #818cf8;
-    --accent-glow: rgba(99, 102, 241, 0.15);
+    --accent: #2ed9d9;
+    --accent-hover: #5ae3e3;
+    --accent-glow: rgba(46, 217, 217, 0.15);
     --danger: #ef4444;
     --danger-hover: #dc2626;
     --success: #22c55e;
@@ -119,14 +119,14 @@ a:hover { color: var(--accent-hover); }
 
 .btn-primary {
     background: var(--accent);
-    color: #fff;
+    color: #09090b;
     border-color: var(--accent);
 }
 
 .btn-primary:hover {
     background: var(--accent-hover);
     border-color: var(--accent-hover);
-    color: #fff;
+    color: #09090b;
     box-shadow: 0 0 20px var(--accent-glow);
 }
 

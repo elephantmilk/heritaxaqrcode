@@ -31,7 +31,7 @@
                     <rect x="19" y="25" width="4" height="6" rx="1" fill="currentColor"/>
                     <rect x="27" y="27" width="4" height="4" rx="1" fill="currentColor"/>
                 </svg>
-                <span class="logo-text">QRCode<strong>Man</strong></span>
+                <span class="logo-text">HeritaxaQR</span>
             </a>
             <?php if (isLoggedIn()): ?>
             <nav class="nav">

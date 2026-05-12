@@ -2,7 +2,7 @@
     </main>
     <footer class="footer">
         <div class="container">
-            <p>&copy; <?= date('Y') ?> QRCodeMan</p>
+            <p>&copy; <?= date('Y') ?> HeritaxaQR</p>
         </div>
     </footer>
     <?php

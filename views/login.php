@@ -15,7 +15,7 @@
                 <rect x="19" y="25" width="4" height="6" rx="1" fill="currentColor"/>
                 <rect x="27" y="27" width="4" height="4" rx="1" fill="currentColor"/>
             </svg>
-            <h1>QRCode<strong>Man</strong></h1>
+            <h1>HeritaxaQR</h1>
             <p class="text-muted">Melde dich an, um deine QR-Codes zu verwalten.</p>
         </div>
 
